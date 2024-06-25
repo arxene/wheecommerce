@@ -4,6 +4,7 @@ import StarRating from "./StarRating";
 
 const Product = ({product}) => {
     return (
+        // TODO: Make cards all the same height even if product.name is shorter or longer
         <Card className="my-3 p-3 rounded">
             <Link to={`/product/${product._id}`}>
                 <Card.Img src={product.image} variant="top" />
@@ -11,7 +12,7 @@ const Product = ({product}) => {
 
             <Card.Body>
                 <Link to={`/product/${product._id}`}>
-                    <Card.Title as="div">
+                    <Card.Title as="div" className="product-title">
                         <strong>{product.name}</strong>
                     </Card.Title>
                 </Link>
