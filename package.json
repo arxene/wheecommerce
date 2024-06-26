@@ -1,0 +1,15 @@
+{
+    "name": "wheecommerce",
+    "version": "1.0.0",
+    "description": "eCommerce app built on MERN stack",
+    "type": "module",
+    "main": "server.js",
+    "scripts": {
+        "start": "node backend/server.js"
+    },
+    "author": "Rachel McMahan",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.19.2"
+    }
+}
