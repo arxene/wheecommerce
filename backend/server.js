@@ -5,7 +5,7 @@ dotenv.config();
 import connectDB from "./config/db.js";
 const port = process.env.PORT || 5000;
 
-import products from "./data/Products.js";
+import productRoutes from "./routes/productRoutes.js";
 
 connectDB(); // Connect to MongoDB
 
@@ -15,15 +15,6 @@ app.get("/", (req, res) => {
     res.send("API is running...");
 });
 
-// Get all products
-app.get("/api/products", (req, res) => {
-    res.json(products);
-});
-
-// Get product by ID
-app.get("/api/products/:id", (req, res) => {
-    const product = products.find((p) => p._id === req.params.id);
-    res.json(product);
-});
+app.use("/api/products", productRoutes);
 
 app.listen(port, () => console.log(`Express server running on port ${port}.`));
