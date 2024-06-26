@@ -1,14 +1,21 @@
+import {useEffect, useState} from "react";
+import axios from "axios";
 import {useParams} from "react-router-dom";
 import {Link} from "react-router-dom";
 import {Row, Col, ListGroup, Card, Button} from "react-bootstrap";
 import StarRating from "../components/StarRating";
 
-import products from "../products";
-
 const ProductScreen = () => {
+    const [product, setProduct] = useState({});
     const {id: productId} = useParams(); // get product._id from URL
-    const product = products.find((p) => p._id === productId);
-    console.log(product);
+    useEffect(() => {
+        const fetchProduct = async () => {
+            const {data} = await axios.get(`/api/products/${productId}`);
+            setProduct(data);
+        };
+
+        fetchProduct();
+    }, [productId]); // run effect again if productId changes
 
     return (
         <>
