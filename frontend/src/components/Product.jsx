@@ -17,7 +17,6 @@ const Product = ({product}) => {
                     </Card.Title>
                 </Link>
 
-                {/* TODO: above the price, add rating stars and # of reviews */}
                 <Card.Text as="div">
                     <StarRating rating={product.rating} text={`${product.numReviews} reviews`} />
                 </Card.Text>
