@@ -1,9 +1,12 @@
-import {Nav, Navbar, Container} from "react-bootstrap";
+import {Badge, Nav, Navbar, Container} from "react-bootstrap";
 import {FaShoppingCart, FaUser} from "react-icons/fa";
 import {LinkContainer} from "react-router-bootstrap";
+import {useSelector} from "react-redux";
 import logo from "../assets/wc-high-resolution-logo-white-transparent.png";
 
 const Header = () => {
+    const {cartItems} = useSelector((state) => state.cart); // the name cart comes from store.js
+
     return (
         <header>
             <Navbar bg="dark" variant="dark" expand="sm" collapseOnSelect>
@@ -21,6 +24,11 @@ const Header = () => {
                             <LinkContainer to="/cart">
                                 <Nav.Link>
                                     <FaShoppingCart /> Cart
+                                    {cartItems.length > 0 && (
+                                        <Badge pill bg="success" style={{marginLeft: "5px"}}>
+                                            {cartItems.reduce((accumulator, current) => accumulator + current.qty, 0)}
+                                        </Badge>
+                                    )}
                                 </Nav.Link>
                             </LinkContainer>
 
