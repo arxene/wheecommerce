@@ -8,7 +8,7 @@ const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
-        addToCart: (state, action) => {
+        addToOrUpdateCart: (state, action) => {
             const itemToAdd = action.payload;
 
             // need to check if item already in cart to properly update quantity
@@ -28,6 +28,6 @@ const cartSlice = createSlice({
     },
 });
 
-export const {addToCart} = cartSlice.actions;
+export const {addToOrUpdateCart} = cartSlice.actions;
 
 export default cartSlice.reducer;

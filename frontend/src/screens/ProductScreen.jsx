@@ -7,7 +7,7 @@ import StarRating from "../components/StarRating";
 import {useGetProductDetailsQuery} from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import {addToCart} from "../slices/cartSlice";
+import {addToOrUpdateCart} from "../slices/cartSlice";
 
 const ProductScreen = () => {
     const {id: productId} = useParams(); // get product._id from URL
@@ -16,7 +16,7 @@ const ProductScreen = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const addToCartHandler = () => {
-        dispatch(addToCart({...product, qty}));
+        dispatch(addToOrUpdateCart({...product, qty}));
         navigate("/cart");
     };
 
