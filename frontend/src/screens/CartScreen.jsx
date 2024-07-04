@@ -20,6 +20,11 @@ const CartScreen = () => {
         dispatch(removeFromCart(id));
     };
 
+    const checkoutHandler = () => {
+        // TODO If not logged in, it should instead redirect to a Login screen
+        navigate("/login?redirect=/shipping");
+    };
+
     return (
         <Row>
             <Col md={8}>
@@ -88,7 +93,12 @@ const CartScreen = () => {
                         </ListGroup.Item>
 
                         <ListGroup.Item>
-                            <Button type="button" className="btn-block" disabled={cartItems.length === 0}>
+                            <Button
+                                type="button"
+                                className="btn-block"
+                                disabled={cartItems.length === 0}
+                                onClick={checkoutHandler}
+                            >
                                 Proceed to Checkout
                             </Button>
                         </ListGroup.Item>
