@@ -22,12 +22,17 @@ const cartSlice = createSlice({
                 state.cartItems = [...state.cartItems, itemToAdd];
             }
 
-            // Calculate item price
-            return updateCart(state);
+            return updateCart(state); // updates local storage
+        },
+        removeFromCart: (state, action) => {
+            // When they click the trash icon on the Cart page, remove that item from the cart
+            state.cartItems = state.cartItems.filter((item) => item._id !== action.payload);
+
+            return updateCart(state); // updates local storage
         },
     },
 });
 
-export const {addToOrUpdateCart} = cartSlice.actions;
+export const {addToOrUpdateCart, removeFromCart} = cartSlice.actions;
 
 export default cartSlice.reducer;
