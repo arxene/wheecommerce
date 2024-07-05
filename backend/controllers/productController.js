@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Product from "../models/productModel.js";
+import {StatusCodes} from "http-status-codes";
 
 // @desc    Get all products
 // @route   GET /api/products
@@ -18,7 +19,7 @@ const getProductById = asyncHandler(async (req, res) => {
     if (product) {
         res.json(product);
     } else {
-        res.status(404);
+        res.status(StatusCodes.NOT_FOUND);
         throw new Error(`Product ID ${req.params.id} not found.`);
     }
 });
