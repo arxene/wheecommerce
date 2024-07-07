@@ -1,7 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import {StatusCodes} from "http-status-codes";
-import jwt from "jsonwebtoken";
+import generateToken from "../utils/generateToken.js";
 
 // @desc    Authenticate user & get token
 // @route   POST /api/users/login
@@ -11,16 +11,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const user = await User.findOne({email});
     if (user && (await user.isPasswordValid(password))) {
-        const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: "30d"});
-
-        // Set JWT as HTTP-only cookie
-        const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000;
-        res.cookie("jwt", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV !== "development", // only true in production because HTTPS needed
-            sameSite: "strict",
-            maxAge: thirtyDaysInMilliseconds,
-        });
+        generateToken(res, user._id);
 
         res.json({
             _id: user._id,
@@ -40,7 +31,36 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-    res.send("register user");
+    const {name, email, password} = req.body;
+
+    const userAlreadyExists = await User.findOne({email});
+
+    if (userAlreadyExists) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("User already exists");
+    }
+
+    const newUser = await User.create({
+        name,
+        email,
+        password,
+    });
+
+    if (newUser) {
+        // user registration successful
+        // login as new user, create JWT cookie
+        generateToken(res, newUser._id);
+
+        res.status(StatusCodes.CREATED).json({
+            _id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            isAdmin: newUser.isAdmin,
+        });
+    } else {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("Invalid user data");
+    }
 });
 
 // @desc    Logout user & clear cookie
