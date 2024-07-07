@@ -13,7 +13,7 @@ const loginUser = asyncHandler(async (req, res) => {
     if (user && (await user.isPasswordValid(password))) {
         generateToken(res, user._id);
 
-        res.json({
+        res.status(StatusCodes.OK).json({
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -80,14 +80,49 @@ const logoutUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-    res.send("get user profile");
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        res.status(StatusCodes.OK).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+        });
+    } else {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("User not found");
+    }
 });
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile (TODO: doesn't need :id because will use JWT token to update their profile)
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-    res.send("update user profile");
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        // for name and email, use info sent from request, but if missing, use what's already saved in DB
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+
+        // checking for password separately if sent in request body
+        // if not, then we skip doing the encryption step in userModel.js
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+
+        const updatedUser = await user.save();
+        res.status(StatusCodes.OK).json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+        });
+    } else {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("User not found");
+    }
 });
 
 // @desc    Get users
