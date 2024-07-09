@@ -53,41 +53,37 @@ const RegisterScreen = () => {
             <h1>Register Account</h1>
 
             <Form onSubmit={submitHandler}>
-                <Form.Group controlId="name" className="my-3">
-                    <Form.Control
-                        type="text"
-                        placeholder="First last name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    ></Form.Control>
-                </Form.Group>
+                <Form.Control
+                    type="text"
+                    placeholder="Name"
+                    value={name}
+                    className="my-3"
+                    onChange={(e) => setName(e.target.value)}
+                ></Form.Control>
 
-                <Form.Group controlId="email" className="my-3">
-                    <Form.Control
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    ></Form.Control>
-                </Form.Group>
+                <Form.Control
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    className="my-3"
+                    onChange={(e) => setEmail(e.target.value)}
+                ></Form.Control>
 
-                <Form.Group controlId="password" className="my-3">
-                    <Form.Control
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    ></Form.Control>
-                </Form.Group>
+                <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    className="my-3"
+                    onChange={(e) => setPassword(e.target.value)}
+                ></Form.Control>
 
-                <Form.Group controlId="confirmPassword" className="my-3">
-                    <Form.Control
-                        type="password"
-                        placeholder="Re-type Password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    ></Form.Control>
-                </Form.Group>
+                <Form.Control
+                    type="password"
+                    placeholder="Re-type Password"
+                    value={confirmPassword}
+                    className="my-3"
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                ></Form.Control>
 
                 <Button type="submit" variant="primary" className="mt-2" disabled={isRegistering}>
                     Register
