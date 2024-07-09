@@ -71,14 +71,6 @@ const ShippingScreen = () => {
                     onChange={(e) => setPostalCode(e.target.value)}
                 ></Form.Control>
 
-                {/* <Form.Control
-                    type="text"
-                    placeholder="Country"
-                    value={country}
-                    className="my-2"
-                    onChange={(e) => setCountry(e.target.value)}
-                ></Form.Control> */}
-
                 <Select options={countryOptions} value={country} onChange={changeCountryHandler} />
 
                 <Button type="submit" variant="primary" className="my-2">
