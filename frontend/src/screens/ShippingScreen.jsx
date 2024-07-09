@@ -6,6 +6,7 @@ import Select from "react-select";
 import countryList from "react-select-country-list";
 import FormContainer from "../components/FormContainer";
 import {saveShippingAddress} from "../slices/cartSlice";
+import CheckoutSteps from "../components/CheckoutSteps";
 
 const ShippingScreen = () => {
     // get shipping address details from Redux state
@@ -33,6 +34,8 @@ const ShippingScreen = () => {
 
     return (
         <FormContainer>
+            <CheckoutSteps step1 step2 />
+
             <h1>Shipping</h1>
 
             <Form onSubmit={submitHandler}>
