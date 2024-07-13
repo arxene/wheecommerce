@@ -12,6 +12,9 @@ export const updateCart = (state) => {
     state.shippingPrice = toDollarAmount(state.itemsPrice > 100 ? 0 : 10);
 
     // Calculate tax (15% tax)
+    // BUG: Fix taxPrice or toDollarAmount which is only showing 1 decimal place
+    // Can see with 1 gaming mouse and 2 DSLR cameras in cart. Tax price in cart is set to 286.5
+    // Instead it should be 286.50
     state.taxPrice = toDollarAmount(Number(0.15 * state.itemsPrice));
 
     // Calculate total price

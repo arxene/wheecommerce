@@ -1,9 +1,7 @@
-import {useState, useMemo} from "react";
+import {useState} from "react";
 import {Form, Button} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import Select from "react-select";
-import countryList from "react-select-country-list";
 import FormContainer from "../components/FormContainer";
 import {saveShippingAddress} from "../slices/cartSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
@@ -16,19 +14,14 @@ const ShippingScreen = () => {
     const [address, setAddress] = useState(shippingAddress?.address || "");
     const [city, setCity] = useState(shippingAddress?.city || "");
     const [postalCode, setPostalCode] = useState(shippingAddress?.postalCode || "");
-    const [state, setState] = useState(shippingAddress?.state || "");
     const [country, setCountry] = useState(shippingAddress?.country || "");
-    const countryOptions = useMemo(() => countryList().getData(), []);
-    const changeCountryHandler = (value) => {
-        setCountry(value);
-    };
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const submitHandler = (e) => {
         e.preventDefault();
-        dispatch(saveShippingAddress({address, city, state, postalCode, country}));
+        dispatch(saveShippingAddress({address, city, postalCode, country}));
         navigate("/payment");
     };
 
@@ -55,13 +48,14 @@ const ShippingScreen = () => {
                     onChange={(e) => setCity(e.target.value)}
                 ></Form.Control>
 
+                {/* TODO: Implement state dropdown and update Order model
                 <Form.Control
                     type="text"
                     placeholder="State"
                     value={state}
                     className="my-2"
                     onChange={(e) => setState(e.target.value)}
-                ></Form.Control>
+                ></Form.Control> */}
 
                 <Form.Control
                     type="text"
@@ -71,7 +65,13 @@ const ShippingScreen = () => {
                     onChange={(e) => setPostalCode(e.target.value)}
                 ></Form.Control>
 
-                <Select options={countryOptions} value={country} onChange={changeCountryHandler} />
+                <Form.Control
+                    type="text"
+                    placeholder="Country"
+                    value={country}
+                    className="my-2"
+                    onChange={(e) => setCountry(e.target.value)}
+                ></Form.Control>
 
                 <Button type="submit" variant="primary" className="my-2">
                     Continue to payment
