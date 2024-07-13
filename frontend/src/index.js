@@ -7,6 +7,7 @@ import "./assets/styles/bootstrap.custom.css";
 import "./assets/styles/index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import {PayPalScriptProvider} from "@paypal/react-paypal-js";
 
 import PrivateRoute from "./components/PrivateRoute";
 import HomeScreen from "./screens/HomeScreen";
@@ -42,7 +43,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <RouterProvider router={router} />
+            <PayPalScriptProvider deferLoading={true}>
+                <RouterProvider router={router} />
+            </PayPalScriptProvider>
         </Provider>
     </React.StrictMode>
 );
