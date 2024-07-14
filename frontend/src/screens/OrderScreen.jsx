@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 import {Link, useParams} from "react-router-dom";
-import {Row, Col, ListGroup, Image, Form, Button, Card} from "react-bootstrap";
+import {Row, Col, ListGroup, Image, Button, Card} from "react-bootstrap";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import {PayPalButtons, usePayPalScriptReducer} from "@paypal/react-paypal-js";
@@ -37,10 +37,50 @@ const OrderScreen = () => {
 
             // if order isn't paid yet and the PayPal script isn't already loaded, load the script
             if (order && !order.isPaid && !window.paypal) {
+                console.log("loadPayPalScript()");
                 loadPayPalScript();
             }
         }
     }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal]);
+
+    const onApprove = (data, actions) => {
+        return actions.order.capture().then(async (details) => {
+            try {
+                await payOrder({orderId, details});
+                refetch(); // refetch so Message says it's paid now
+                toast.success("Payment successful");
+            } catch (error) {
+                toast.error(error?.data?.message || error.message);
+            }
+        });
+    };
+
+    // only for testing marking item as paid without involving PayPal
+    async function onApproveTest() {
+        await payOrder({orderId, details: {payer: {}}});
+        refetch(); // refetch so Message says it's paid now
+        toast.success("Payment successful");
+    }
+
+    const createOrder = (data, actions) => {
+        return actions.order
+            .create({
+                purchase_units: [
+                    {
+                        amount: {
+                            value: order.totalPrice,
+                        },
+                    },
+                ],
+            })
+            .then((orderId) => {
+                return orderId;
+            });
+    };
+
+    const onError = (err) => {
+        toast.error(err.message);
+    };
 
     return isLoading ? (
         <Loader />
@@ -150,7 +190,29 @@ const OrderScreen = () => {
                                     </Row>
                                 </ListGroup.Item>
 
-                                {/* TODO: Pay order */}
+                                {!order.isPaid && (
+                                    <ListGroup.Item>
+                                        {loadingPayPal || isPending ? (
+                                            <Loader />
+                                        ) : (
+                                            <div>
+                                                {/* Just used to set Order.isPaid without involving PayPal
+                                                <Button onClick={onApproveTest} style={{marginBottom: "10]]px"}}>
+                                                    Test Pay Order
+                                                </Button> */}
+
+                                                <div>
+                                                    <PayPalButtons
+                                                        createOrder={createOrder}
+                                                        onApprove={onApprove}
+                                                        onError={onError}
+                                                    ></PayPalButtons>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </ListGroup.Item>
+                                )}
+
                                 {/* TODO: Mark as delivered for admins */}
                             </ListGroup.Item>
                         </ListGroup>
