@@ -1,8 +1,7 @@
 import {useEffect} from "react";
 import {Link, useParams} from "react-router-dom";
-import {Row, Col, ListGroup, Image, Button, Card} from "react-bootstrap";
+import {Row, Col, ListGroup, Image, Card} from "react-bootstrap";
 import {toast} from "react-toastify";
-import {useSelector} from "react-redux";
 import {PayPalButtons, usePayPalScriptReducer} from "@paypal/react-paypal-js";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -12,13 +11,11 @@ const OrderScreen = () => {
     const {id: orderId} = useParams(); // get order ID from URL
     const {data: order, refetch, isLoading, error} = useGetOrderDetailsQuery(orderId);
 
-    const [payOrder, {isLoading: loadingPayOrder}] = usePayOrderMutation();
+    const [payOrder] = usePayOrderMutation();
 
     const [{isPending}, paypalDispatch] = usePayPalScriptReducer();
 
     const {data: paypal, isLoading: loadingPayPal, error: errorPayPal} = useGetPayPalClientIdQuery();
-
-    const {userInfo} = useSelector((state) => state.auth);
 
     // load PayPal script
     useEffect(() => {
@@ -54,13 +51,6 @@ const OrderScreen = () => {
             }
         });
     };
-
-    // only for testing marking item as paid without involving PayPal
-    async function onApproveTest() {
-        await payOrder({orderId, details: {payer: {}}});
-        refetch(); // refetch so Message says it's paid now
-        toast.success("Payment successful");
-    }
 
     const createOrder = (data, actions) => {
         return actions.order
@@ -196,11 +186,6 @@ const OrderScreen = () => {
                                             <Loader />
                                         ) : (
                                             <div>
-                                                {/* Just used to set Order.isPaid without involving PayPal
-                                                <Button onClick={onApproveTest} style={{marginBottom: "10]]px"}}>
-                                                    Test Pay Order
-                                                </Button> */}
-
                                                 <div>
                                                     <PayPalButtons
                                                         createOrder={createOrder}
