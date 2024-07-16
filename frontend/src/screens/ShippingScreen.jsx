@@ -48,15 +48,6 @@ const ShippingScreen = () => {
                     onChange={(e) => setCity(e.target.value)}
                 ></Form.Control>
 
-                {/* TODO: Implement state dropdown and update Order model
-                <Form.Control
-                    type="text"
-                    placeholder="State"
-                    value={state}
-                    className="my-2"
-                    onChange={(e) => setState(e.target.value)}
-                ></Form.Control> */}
-
                 <Form.Control
                     type="text"
                     placeholder="Postal code"
