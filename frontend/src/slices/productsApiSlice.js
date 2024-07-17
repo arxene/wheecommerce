@@ -38,7 +38,6 @@ export const productsApiSlice = apiSlice.injectEndpoints({
                 body: data,
             }),
         }),
-        }),
     }),
 });
 
