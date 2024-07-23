@@ -6,8 +6,15 @@ import {StatusCodes} from "http-status-codes";
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-    const products = await Product.find({});
-    res.json(products);
+    const pageSize = 2;
+    const currentPage = Number(req.query.pageNumber) || 1;
+    const totalNumberOfProducts = await Product.countDocuments();
+
+    const products = await Product.find({})
+        .limit(pageSize)
+        .skip(pageSize * (currentPage - 1));
+
+    res.json({products, currentPage, numPages: Math.ceil(totalNumberOfProducts / pageSize)});
 });
 
 // @desc    Get a product by ID
@@ -84,4 +91,45 @@ const deleteProduct = asyncHandler(async (req, res) => {
     }
 });
 
-export {getProducts, getProductById, createProduct, updateProduct, deleteProduct};
+// @desc    Create a product review
+// @route   POST /api/products/:id/reviews
+// @access  Private
+const createProductReview = asyncHandler(async (req, res) => {
+    const {rating, comment} = req.body;
+
+    const product = await Product.findById(req.params.id);
+
+    if (product) {
+        const productAlreadyReviewed = product.reviews.find(
+            (review) => review.user.toString() === req.user._id.toString()
+        );
+
+        if (productAlreadyReviewed) {
+            res.status(StatusCodes.BAD_REQUEST);
+            throw new Error("You have already reviewed this product.");
+        }
+
+        const review = {
+            name: req.user.name,
+            rating: Number(rating),
+            comment,
+            user: req.user._id,
+        };
+
+        product.reviews.push(review);
+
+        product.numReviews = product.reviews.length;
+
+        // calculate the average rating
+        product.rating =
+            product.reviews.reduce((accumulator, review) => accumulator + review.rating, 0) / product.reviews.length;
+
+        await product.save();
+        res.status(StatusCodes.CREATED).json({message: "Review successfully added!"});
+    } else {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Resource not found");
+    }
+});
+
+export {getProducts, getProductById, createProduct, updateProduct, deleteProduct, createProductReview};
